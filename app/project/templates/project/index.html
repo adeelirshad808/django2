@@ -1,4 +1,23 @@
 {% extends 'project/base.html' %}
-{% block contents %}
+hhh
+{% block content %}
+<br>
+{%for assignment in assignments%}
+<h4>Assignment: </h4>
+
+
+{{assignment.assignment_details}}
+<br>
+<form action="assignment/" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="file" name="inputFile"><br>
+    <button type="submit" class="btn btn-primary m-3">Submit</button>
+    <br>
+    <hr>
+
+    {% endfor %}
+</form>
+
 
 {% endblock %}

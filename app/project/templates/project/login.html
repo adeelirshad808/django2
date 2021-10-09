@@ -1,12 +1,18 @@
 {% extends 'project/base.html' %}
 
 {% block content %}
+<style>
+    .formLogin {
+        margin-left: 180px;
+        margin-top: 30px;
+    }
+</style>
 
 <div class="container">
     <div class="row">
         <div class="col-lg-8 co-md-8 col-sm-8 col-8">
 
-            <form method="POST">
+            <form method="POST" class="formLogin">
                 {% csrf_token %}
 
                 <div class="form-group">

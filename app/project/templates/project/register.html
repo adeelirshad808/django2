@@ -1,12 +1,17 @@
 {% extends 'project/base.html' %}
 
 {% block content %}
+<style>
+    .formReg {
+        margin-left: 240px;
+    }
+</style>
 
 {% if registered %}
 <h1>Thankyou for registering</h1>
 {% else %}
 
-<form action="" method="POST">
+<form class="formReg" method="POST">
     {% csrf_token %}
 
     {{user_form}}

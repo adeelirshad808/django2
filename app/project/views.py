@@ -4,13 +4,64 @@ from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+from project.models import Teacher
+from project.models import Student
+from project.models import Submissions
+from project.models import Assignment
 from project.forms import UserRegisterationForm
 from django.http import HttpResponse, HttpResponseRedirect
 
 
 def index(request):
-    print(request)
-    return render(request, 'project/index.html')
+    ass = Submissions.objects.all()
+
+    assignments = ''
+    t = True
+    if t == False:
+        if request.user.is_authenticated:
+            print(request.user.is_authenticated)
+            assignments = Assignment.objects.all()
+
+        return render(request, 'project/index.html',
+                      {'assignments': assignments})
+
+    else:
+        return render(request, 'project/teacher.html')
+
+    # return render(request, 'project/index.html', )
+
+
+def teacher(request):
+    if request.method == "POST":
+        task = request.POST.get('task')
+        teacher_instance = Teacher.objects.get(teacher_name=request.user)
+        task = Assignment.objects.create(assignment_creator=teacher_instance,
+                                         assignment_details=task)
+        print(task)
+        task.save()
+        return HttpResponse('task created')
+    else:
+        all_assignments = Submissions.objects.all()
+        for sub in all_assignments:
+            print(sub.submission_file)
+
+        return render(request, 'project/teacher.html',
+                      {'assignments': all_assignments})
+
+
+def assignment(request):
+    username = request.user
+    if request.method == "POST":
+
+        uploaded_file = request.FILES['inputFile']
+        student = Student.objects.get(student_name=request.user)
+        std_instance = student
+        document = Submissions.objects.create(submitted_by=std_instance,
+                                              submission_file=uploaded_file)
+        document.save()
+
+        return HttpResponse('you file uploaded')
+    return render(request, 'project/assignment.html')
 
 
 def register(request):

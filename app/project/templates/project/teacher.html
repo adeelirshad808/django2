@@ -1,0 +1,44 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<h4>Create Task</h4>
+
+<br>
+<style>
+    .container {
+        margin-left: 240px;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 colmd-8 col-sm-8">
+            <h4>create task</h4>
+            <form action="teacher/" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <textarea name="task" class="m-2" style="width: 90%;" cols="50" rows="10"></textarea><br>
+                <button type="submit" class="btn btn-primary m-3">Submit</button>
+            </form>
+            {% for assignment in assignments %}
+
+            <a href="{{ assignment.submission_file.url}}" download>{{assignment.submission_file}} </a><br>
+
+            <h4>{{assignment.submitted_by}}</h4><br>
+            <a href="#">Check Plagirism Report</a><br>
+            <h4>Plagirism % : </h4> <br>
+            <input type="number" placeholder="Give marks">
+            <input type="submit">
+            <hr>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+<br>
+<hr>
+
+
+
+{% endblock %}
