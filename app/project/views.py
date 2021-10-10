@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from project.models import Teacher
@@ -10,25 +10,43 @@ from project.models import Submissions
 from project.models import Assignment
 from project.forms import UserRegisterationForm
 from django.http import HttpResponse, HttpResponseRedirect
+import c
+
 
 
 def index(request):
-    ass = Submissions.objects.all()
+    students = Student.objects.all()
+    teachers = Teacher.objects.all()
+    loggedin_user = request.user
+    assignments = Assignment.objects.all()
+    submissions = Submissions.objects.all()
+    print('user', request.user)
+    print('user', request.user.is_anonymous)
+    if request.user.is_anonymous == True:
+        # for st in students:
+        #     if str(st) == str(request.user.username):
+        #         print('student', (request.user.username))
+        #         for assignment in assignments:
+        #             print('assignments', assignments)
+        #         return render(request, 'project/index.html',
+        #                       {'assignments': assignments})
+        #     else:
+        #         print('not student running', (request.user.username))
+        #         return render(request, 'project/not_registered.html',
+        #                       {'loggedin_user': loggedin_user})
 
-    assignments = ''
-    t = True
-    if t == False:
-        if request.user.is_authenticated:
-            print(request.user.is_authenticated)
-            assignments = Assignment.objects.all()
-
-        return render(request, 'project/index.html',
-                      {'assignments': assignments})
+        for teacher in teachers:
+            if str(teacher) == str(request.user.username):
+                print('teacherssssss', (request.user.username))
+                return render(request, 'project/teacher.html',
+                              {'assignments': assignments})
+            else:
+                print('not teacher', (request.user.username))
+                return render(request, 'project/not_registered.html',
+                              {'loggedin_user': loggedin_user})
 
     else:
-        return render(request, 'project/teacher.html')
-
-    # return render(request, 'project/index.html', )
+        return render(request, 'project/index.html')
 
 
 def teacher(request):
@@ -92,7 +110,7 @@ def user_login(request):
             if user.is_active:
                 print(user.is_active)
                 login(request, user)
-                return render(request, 'project/index.html')
+                return redirect('index')
             else:
                 return HttpResponse('Account is deactivated')
         else:
@@ -106,3 +124,8 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
+
+
+def check_plagirism(request):
+
+    return HttpResponseRedirect(reverse('check_plagirism'))
